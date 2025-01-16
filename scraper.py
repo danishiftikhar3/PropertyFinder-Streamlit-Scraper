@@ -17,11 +17,12 @@ def scrape_page(url, driver):
     driver.get(url)
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
-            (By.CLASS_NAME, "property-card-module_property-card__wrapper__ZZTal ")
+            (By.CLASS_NAME, "property-card-module_property-card__wrapper__ZZTal")
         )
     )
+    print("no error here 24")
     listings = driver.find_elements(
-        By.CLASS_NAME, "property-card-module_property-card__wrapper__ZZTal "
+        By.CLASS_NAME, "property-card-module_property-card__wrapper__ZZTal"
     )
     return [
         {"url": url, "html_content": listing.get_attribute("outerHTML")}
@@ -98,19 +99,13 @@ def main():
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Run headless
     chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")  # Applicable to Windows OS
     chrome_options.add_argument(
         "--window-size=1920x1080"
     )  # Set the window size for headless mode
 
-    # Path to chromedriver binary
-    chromedriver_path = "./chromedriver"  # Adjust this path if chromedriver is not in the same directory
-
     # Initialize WebDriver with options
-    driver = webdriver.Chrome(
-        service=Service(chromedriver_path), options=chrome_options
-    )
+    driver = webdriver.Chrome(service=Service(), options=chrome_options)
 
     all_listings = []
 
@@ -120,6 +115,7 @@ def main():
             paginated_url = f"{url}&page={i}"
             print(f"Scraping page {i} of {n}...")
             listings = scrape_page(paginated_url, driver)
+            print(listings)
             all_listings.extend(listings)
             time.sleep(0.1)  # Small delay between requests
 
